@@ -167,7 +167,7 @@ end
 if (iscell(cstrFilenames))
    % - Read each ROI in turn
    cvsROI = cellfun(@ReadImageJROI, CellFlatten(cstrFilenames), 'UniformOutput', false);
-   
+    
    % - Return all ROIs
    sROI = cvsROI;
    return;
