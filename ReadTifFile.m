@@ -47,7 +47,7 @@ Intensity = averROI(imgSeqSubtract1stF, imgNum);
 
 
 % -- Laplace and iLaplace dROI for Current info
-Current = intensity2current(Intensity);
+Current = intensity2current(Intensity, imgNum);
 
 
 % -- plot Current
