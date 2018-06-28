@@ -4,10 +4,10 @@ function Current = intensity2current(Intensity, imgNum)
 %
 n = -1;    % Number of electrons transferred in the cell;
 F = 9.65e4;   %Faraday constant;
-R = 8.314 ;   % Universal gas constant;
-T = 280;      % Temperature;
-Do = 1e-9; % Difusion coefficient of oxydant;
-Dr = 1e-9; % Difusion coefficient of reductant;
+% R = 8.314 ;   % Universal gas constant;
+% T = 280;      % Temperature;
+% Do = 1e-9; % Difusion coefficient of oxydant;
+% Dr = 1e-9; % Difusion coefficient of reductant;
 D = 1e-9;
 
 AlphaOxi = 7.34;

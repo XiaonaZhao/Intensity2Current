@@ -1,39 +1,39 @@
 clc
 clear
+% main function
 
 
 % -- Read .tiff files
 
-tifFiles = uigetfile('*.tif', 'Multiselect', 'on'); 
+[tifFiles, tifPath] = uigetfile('*.tiff', 'Multiselect', 'on'); 
 if isequal(tifFiles, 0)
    disp('User selected Cancel')
    return;
 end
 tifFiles = cellstr(tifFiles);  % Care for the correct type 
 imgNum = length(tifFiles);
-imgSeq = cell(imgNum,1); % Line Data structure
+imgSeq = cell(imgNum,1); % Line Data structure, imgSeq is column vector
 for j = 1:imgNum
-    imgSeq{j} = imread(tifFiles{j}); % read all tiff files
+    imgSeq{j} = imread(fullfile(tifPath, tifFiles{j})); % read all tiff files
 end
-% % - 3D data structure from QC
-% img = cell(imgNum,3); 
-% % allnames = struct2cell(dir('*.tiff'));
-% for j = 1:imgNum
-%     img{j,:,:} = j;
-% end
-% for j = 1:imgNum
-%     img{:,:,j} = imread(tifFiles{j}); % read all tiff files
-% end
 
 
 % -- Select ROIs
 
-cstrFilenames = uigetfile(...
+[cstrFilenames, cstrPathname] = uigetfile(...
     {'*.roi',  'ROI (*.roi)';...
     '*.zip',  'Zip-files (*.zip)';...
     '*.*',  'All Files (*.*)',...
     },'Pick a file');
-[sROI] = ReadImageJROI(cstrFilenames);
+[sROI] = ReadImageJROI(fullfile(cstrPathname, cstrFilenames));
+RectBounds = sROI.vnRectBounds;
+% Return current position of ROI object, [xmin ymin width height]
+position = [RectBounds(1), RectBounds(2),...
+    (RectBounds(3)-RectBounds(1)),...
+    (RectBounds(4)-RectBounds(2))];
+for j = 1:imgNum
+    imgSeq{j} = imcrop(imgSeq{j}, position);
+end
 
 
 % -- Background removal
@@ -47,7 +47,20 @@ Intensity = averROI(imgSeqSubtract1stF, imgNum);
 
 
 % -- Laplace and iLaplace dROI for Current info
+
 Current = intensity2current(Intensity, imgNum);
 
 
 % -- plot Current
+
+% calaulate the X axis
+Dots = length(Current);
+Voltage1 = 0;
+Voltage2 = -0.5;
+Voltage = (linspace(Voltage1, Voltage2, Dots))'; % linspace is row vector
+
+figure
+plot(Current, Voltage);
+title('Graph of current calculated by SPR intensity');% plot title
+xlabel('Voltage/V') % x-axis label
+ylabel('Current/A') % y-axis label
