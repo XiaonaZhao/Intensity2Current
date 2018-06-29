@@ -16,6 +16,7 @@ imgSeq = cell(imgNum,1); % Line Data structure, imgSeq is column vector
 for j = 1:imgNum
     imgSeq{j} = imread(fullfile(tifPath, tifFiles{j})); % read all tiff files
 end
+clear tifFiles tifPath j
 
 
 % -- Select ROIs
@@ -34,21 +35,25 @@ position = [RectBounds(1), RectBounds(2),...
 for j = 1:imgNum
     imgSeq{j} = imcrop(imgSeq{j}, position);
 end
+clear cstrFilenames cstrPathname sROI RectBounds postion j
 
 
 % -- Background removal
 
 imgSeqSubtract1stF = BgdRemoval(imgSeq, imgNum);
+clear imgSeq
 
 
 % -- Average each dROI
 
 Intensity = averROI(imgSeqSubtract1stF, imgNum);
+clear imgSeqSubtract1stF
 
 
 % -- Laplace and iLaplace dROI for Current info
 
 Current = intensity2current(Intensity, imgNum);
+clear intensity
 
 
 % -- plot Current

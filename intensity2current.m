@@ -17,6 +17,10 @@ frameRate = 106;
 Time = (1:imgNum)./frameRate;
 DeltaT = ones(imgNum,1)./frameRate;
 
+ V = ones(imgNum,1)*Time;
+ H = (ones(imgNum,1)*[Time(3:end) 0 0])';
+ Sub = sqrt(H-V);
+
 Current = zeros(imgNum-1,1);
 Sum_new = zeros(imgNum-2,1);
 for i = 3 : imgNum
