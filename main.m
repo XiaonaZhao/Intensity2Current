@@ -12,20 +12,9 @@ clear
 % Created: 29 June 2018
 
 
-% -- Read .tiff files
+% -- Read the alive .tiff files
 
-[tifFiles, tifPath] = uigetfile('*.tiff', 'Multiselect', 'on'); 
-if isequal(tifFiles, 0)
-   disp('User selected Cancel')
-   return;
-end
-tifFiles = cellstr(tifFiles);  % Care for the correct type 
-imgNum = length(tifFiles);
-imgSeq = cell(imgNum,1); % Line Data structure, imgSeq is column vector
-for j = 1:imgNum
-    imgSeq{j} = imread(fullfile(tifPath, tifFiles{j})); % read all tiff files
-end
-clear tifFiles tifPath j
+[imgSeq, imgNum] = ReadTifFiles;
 
 
 % -- Select ROIs
@@ -56,16 +45,18 @@ clear cstrFilenames cstrPathname sROI Polygon
 clear col row BW j imgSeq
 
 
-% -- Background removal
+% -- Remove the no-electro background
 
-imgSeqSubtract1stF = BgdRemoval(imgSegment, imgNum);
-clear imgSegment
+[BgSeq, BgNum] = ReadTifFiles;
+imgSubtractBg = BgdRemoval(imgSegment,...
+    imgNum,BgSeq, BgNum);
+clear imgSegment BgSeq BgNum
 
 
 % -- Average each dROI
 
-Intensity = averROI(imgSeqSubtract1stF, imgNum);
-clear imgSeqSubtract1stF
+Intensity = averROI(imgSubtractBg, imgNum);
+clear imgSubtractBg
 
 
 % -- Laplace and iLaplace dROI for Current info

@@ -7,3 +7,4 @@ for j = 1:roiNum
     Intensity(j) = sum( temp(:) )/(length(nonzero)); % Intensity is column vector
 end
 clear j
+end

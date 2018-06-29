@@ -1,7 +1,17 @@
-function imgSeqSubtract1stF = BgdRemoval(imgSeq, imgNum)
+function imgSubtractBg = BgdRemoval(imgSeq, imgNum,BgSeq, BgNum)
 
-imgSeqSubtract1stF = cell(imgNum,1);
-for j = 1:imgNum 
-imgSeqSubtract1stF{j} = imgSeq{j} - imgSeq{1}; 
-end 
-clear j
+sum = zeros(480, 640);
+for j = 1:BgNum
+    temp = double(BgSeq{j});
+    sum = temp + sum;
+end
+averBg = sum./(double(BgNum));
+clear temp j
+
+imgSubtractBg = cell(imgNum,1);
+for j = 1:imgNum
+    temp = double(imgSeq{j});
+    imgSubtractBg{j} = temp - averBg; 
+end
+clear temp j
+end

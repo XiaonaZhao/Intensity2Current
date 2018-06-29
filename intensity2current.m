@@ -38,4 +38,5 @@ for i = 3 : imgNum
     Current(i-1) = (Intensity(i-1)./Constant - Sum_new(i))./abs(DeltaT(i-1)).*((Time(i)-Time(i-1)).^(0.5));
 end
 Current = Current*(-1);
+end
 
