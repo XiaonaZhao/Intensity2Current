@@ -1,6 +1,15 @@
+% main function
 clc
 clear
-% main function
+
+% I still find it difficult to use the imageJ-roi in matlab especially the
+% reactangle. Firstly, the rectangle's decoded-structure is different from
+% the other types'. Then, the inner coordinates in the imageJ-roi seem not
+% cooperating with the coordinates of pixels showed in imageJ. Finally, I don't
+% know how to decode the Jave code of imageJ and still known little on
+% matlab.
+% Author: nonazhao@mail.ustc.edu.cn;
+% Created: 29 June 2018
 
 
 % -- Read .tiff files
@@ -27,21 +36,30 @@ clear tifFiles tifPath j
     '*.*',  'All Files (*.*)',...
     },'Pick a file');
 [sROI] = ReadImageJROI(fullfile(cstrPathname, cstrFilenames));
-RectBounds = sROI.vnRectBounds;
+Polygon = sROI.mnCoordinates;
+col = Polygon(:,2);
+row = Polygon(:,1);
+BW = uint16((roipoly(imgSeq{1},col,row))*1); 
+% "*1" turns logical into double, then "uint16" turn double into uint16.
+
+% RectBounds = sROI.vnRectBounds;
 % Return current position of ROI object, [xmin ymin width height]
-position = [RectBounds(1), RectBounds(2),...
-    (RectBounds(3)-RectBounds(1)),...
-    (RectBounds(4)-RectBounds(2))];
+% position = [RectBounds(1), RectBounds(2),...
+%     (RectBounds(3)-RectBounds(1)),...
+%     (RectBounds(4)-RectBounds(2))];
+% set more variable to monitor the matrix changes
+imgSegment = cell(imgNum,1); 
 for j = 1:imgNum
-    imgSeq{j} = imcrop(imgSeq{j}, position);
+    imgSegment{j} = imgSeq{j}.*BW;
 end
-clear cstrFilenames cstrPathname sROI RectBounds postion j
+clear cstrFilenames cstrPathname sROI Polygon
+clear col row BW j imgSeq
 
 
 % -- Background removal
 
-imgSeqSubtract1stF = BgdRemoval(imgSeq, imgNum);
-clear imgSeq
+imgSeqSubtract1stF = BgdRemoval(imgSegment, imgNum);
+clear imgSegment
 
 
 % -- Average each dROI
