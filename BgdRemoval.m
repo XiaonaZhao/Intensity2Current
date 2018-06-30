@@ -2,16 +2,14 @@ function imgSubtractBg = BgdRemoval(imgSeq, imgNum,BgSeq, BgNum)
 
 sum = zeros(480, 640);
 for j = 1:BgNum
-    temp = double(BgSeq{j});
-    sum = temp + sum;
+    sum = double(BgSeq{j}) + sum;
 end
-averBg = sum./(double(BgNum));
-clear temp j
+averBg = sum./double(BgNum);
+clear j BgSeq BgNum
 
 imgSubtractBg = cell(imgNum,1);
 for j = 1:imgNum
-    temp = double(imgSeq{j});
-    imgSubtractBg{j} = temp - averBg; 
+    imgSubtractBg{j} = double(imgSeq{j}) - averBg; 
 end
-clear temp j
+clear j imgSeq imgNum
 end

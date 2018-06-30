@@ -1,11 +1,6 @@
 function Current = intensity2current(Intensity, imgNum)
 % The reaction on the electrode surface: H2O + e- = H + OH-
-%
-%
-% R = 8.314 ;   % Universal gas constant;
-% T = 280;      % Temperature;
-% Do = 1e-9; % Difusion coefficient of oxydant;
-% Dr = 1e-9; % Difusion coefficient of reductant;
+
 n = -1;    % Number of electrons transferred in the cell;
 F = 9.65e4;   %Faraday constant;
 D = 1e-9;
@@ -21,15 +16,15 @@ V = ones(imgNum,1)*Time;
 H = (ones(imgNum,1)*[Time(3:end) 0 0])';
 Sub = sqrt(H-V);
 
-% fo = fitoptions('method','SmoothingSpline','SmoothingParam',0.05);
-% ft = fittype('smoothingspline'); 
-% data = Intensity;
-% x_1 = (1:numel(data))';
-% ok = isfinite(x_1) & isfinite(data(:));
+fo = fitoptions('method','SmoothingSpline','SmoothingParam',0.05);
+ft = fittype('smoothingspline'); 
+data = Intensity;
+x_1 = (1:numel(data))';
+ok = isfinite(x_1) & isfinite(data(:));
 % data=(data)';
-% cf = fit(x_1(ok),data(ok),ft,fo);
-% data_fit = cf(x_1);
-% Intensity = data_fit;
+cf = fit(x_1(ok),data(ok),ft,fo);
+data_fit = cf(x_1);
+Intensity = data_fit;
 
 Current = zeros(imgNum-1,1);
 Sum_new = zeros(imgNum-2,1);

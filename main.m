@@ -14,7 +14,15 @@ clear
 
 % -- Read the alive .tiff files
 
-[imgSeq, imgNum] = ReadTifFiles;
+[imgSeq, imgNum] = ReadTifFiles; % uint16 cell
+
+
+% -- Remove the no-electro background
+
+[BgSeq, BgNum] = ReadTifFiles;% uint16 cell
+imgSubtractBg = BgdRemoval(imgSeq,...
+    imgNum,BgSeq, BgNum);
+clear imgSeq BgSeq BgNum
 
 
 % -- Select ROIs
@@ -28,7 +36,9 @@ clear
 Polygon = sROI.mnCoordinates;
 col = Polygon(:,2);
 row = Polygon(:,1);
-BW = uint16((roipoly(imgSeq{1},col,row))*1); 
+BW = roipoly(imgSubtractBg{1}, col, row);
+nonzeroBW  = length(find(BW(:)~=0));
+BW = BW*1;
 % "*1" turns logical into double, then "uint16" turn double into uint16.
 
 % RectBounds = sROI.vnRectBounds;
@@ -39,42 +49,30 @@ BW = uint16((roipoly(imgSeq{1},col,row))*1);
 % set more variable to monitor the matrix changes
 imgSegment = cell(imgNum,1); 
 for j = 1:imgNum
-    imgSegment{j} = imgSeq{j}.*BW;
+    imgSegment{j} = imgSubtractBg{j}.*BW; % double cell
 end
 clear cstrFilenames cstrPathname sROI Polygon
-clear col row BW j imgSeq
-
-
-% -- Remove the no-electro background
-
-[BgSeq, BgNum] = ReadTifFiles;
-imgSubtractBg = BgdRemoval(imgSegment,...
-    imgNum,BgSeq, BgNum);
-clear imgSegment BgSeq BgNum
+clear col row BW j imgSubtractBg
 
 
 % -- Average each dROI
 
-Intensity = averROI(imgSubtractBg, imgNum);
-clear imgSubtractBg
+Intensity = averROI(imgSegment, imgNum, nonzeroBW);
+clear imgSegment nonzeroBW
 
 
 % -- Laplace and iLaplace dROI for Current info
 
 Current = intensity2current(Intensity, imgNum);
-clear intensity
+clear Intensity imgNum
 
 
 % -- plot Current
 
-% calaulate the X axis
-Dots = length(Current);
-Voltage1 = 0;
-Voltage2 = -0.5;
-Voltage = (linspace(Voltage1, Voltage2, Dots))'; % linspace is row vector
+Voltage  = calculateVolt(Current);% calaulate the X axis - Voltage
 
 figure
-plot(Current, Voltage);
+plot(Voltage, Current);
 title('Graph of current calculated by SPR intensity');% plot title
 xlabel('Voltage/V') % x-axis label
 ylabel('Current/A') % y-axis label
