@@ -65,7 +65,7 @@ clear imgSegment nonzeroBW
 % -- Laplace and iLaplace dROI for Current info
 
 Current = intensity2current(Intensity, imgNum);
-clear Intensity imgNum
+% clear Intensity imgNum
 
 
 % -- plot Current
