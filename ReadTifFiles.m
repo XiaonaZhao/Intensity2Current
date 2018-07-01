@@ -1,5 +1,5 @@
-function [tifSeq, tifNum] = ReadTifFiles
-[tifFiles, tifPath] = uigetfile('*.tiff', 'Multiselect', 'on'); 
+function [tifSeq, tifNum] = ReadTifFiles(TopName)
+[tifFiles, tifPath] = uigetfile('*.tiff', 'Multiselect', 'on', TopName); 
 if isequal(tifFiles, 0)
    disp('User selected Cancel')
    return;

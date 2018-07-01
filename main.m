@@ -14,12 +14,13 @@ clear
 
 % -- Read the alive .tiff files
 
-[imgSeq, imgNum] = ReadTifFiles; % uint16 cell
+[imgSeq, imgNum] = ReadTifFiles(...
+    'Open sampling image sequence'); % uint16 cell
 
 
 % -- Remove the no-electro background
 
-[BgSeq, BgNum] = ReadTifFiles;% uint16 cell
+[BgSeq, BgNum] = ReadTifFiles('Open background sequence'); % uint16 cell
 imgSubtractBg = BgdRemoval(imgSeq,...
     imgNum,BgSeq, BgNum);
 clear imgSeq BgSeq BgNum
@@ -31,7 +32,7 @@ clear imgSeq BgSeq BgNum
     {'*.roi',  'ROI (*.roi)';...
     '*.zip',  'Zip-files (*.zip)';...
     '*.*',  'All Files (*.*)',...
-    },'Pick a file');
+    },'Pick a .roi imageJ file');
 [sROI] = ReadImageJROI(fullfile(cstrPathname, cstrFilenames));
 Polygon = sROI.mnCoordinates;
 col = Polygon(:,2);
@@ -69,10 +70,10 @@ clear Intensity imgNum
 
 % -- plot Current
 
-Voltage  = calculateVolt(Current);% calaulate the X axis - Voltage
+Voltage  = calculateVolt(Current); % calaulate the X axis - Voltage
 
 figure
 plot(Voltage, Current);
-title('Graph of current calculated by SPR intensity');% plot title
+title('Graph of current calculated by SPR intensity'); % plot title
 xlabel('Voltage/V') % x-axis label
 ylabel('Current/A') % y-axis label
