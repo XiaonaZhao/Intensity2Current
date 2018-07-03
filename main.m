@@ -12,7 +12,7 @@ clear
 % Created: 29 June 2018
 
 
-% -- Read the alive .tiff files
+%% -- Read the alive .tiff files
 
 [imgSeq, imgNum] = ReadTifFiles(...
     'Open sampling image sequence'); % uint16 cell
@@ -21,12 +21,11 @@ clear
 % -- Remove the no-electro background
 
 [BgSeq, BgNum] = ReadTifFiles('Open background sequence'); % uint16 cell
-imgSubtractBg = BgdRemoval(imgSeq,...
-    imgNum,BgSeq, BgNum);
+imgSubtractBg = BgdRemoval(imgSeq, imgNum, BgSeq, BgNum);
 clear imgSeq BgSeq BgNum
 
 
-% -- Select ROIs
+%% -- Select ROIs
 
 [cstrFilenames, cstrPathname] = uigetfile(...
     {'*.roi',  'ROI (*.roi)';...
@@ -34,41 +33,43 @@ clear imgSeq BgSeq BgNum
     '*.*',  'All Files (*.*)',...
     },'Pick a .roi imageJ file');
 [sROI] = ReadImageJROI(fullfile(cstrPathname, cstrFilenames));
-Polygon = sROI.mnCoordinates;
-col = Polygon(:,2);
-row = Polygon(:,1);
+switch sROI.strType
+    case 'Rectangle'
+        RectBounds = sROI.vnRectBounds;
+        % [x-left_up y-left_up x-right_down y-right_down]
+        col = [RectBounds(2), RectBounds(4)];
+        row = [RectBounds(1), RectBounds(3)];
+    case 'Polygon'
+        Polygon = sROI.mnCoordinates;
+        col = Polygon(:,2);
+        row = Polygon(:,1);
+end
 BW = roipoly(imgSubtractBg{1}, col, row);
 nonzeroBW  = length(find(BW(:)~=0));
 BW = BW*1;
 % "*1" turns logical into double, then "uint16" turn double into uint16.
-
-% RectBounds = sROI.vnRectBounds;
-% Return current position of ROI object, [xmin ymin width height]
-% position = [RectBounds(1), RectBounds(2),...
-%     (RectBounds(3)-RectBounds(1)),...
-%     (RectBounds(4)-RectBounds(2))];
 % set more variable to monitor the matrix changes
 imgSegment = cell(imgNum,1); 
 for j = 1:imgNum
     imgSegment{j} = imgSubtractBg{j}.*BW; % double cell
 end
-clear cstrFilenames cstrPathname sROI Polygon
+clear cstrFilenames cstrPathname sROI
 clear col row BW j imgSubtractBg
 
 
-% -- Average each dROI
+%% -- Average each dROI
 
 Intensity = averROI(imgSegment, imgNum, nonzeroBW);
 clear imgSegment nonzeroBW
 
 
-% -- Laplace and iLaplace dROI for Current info
+%% -- Laplace and iLaplace dROI for Current info
 
 Current = intensity2current(Intensity, imgNum);
 % clear Intensity imgNum
 
 
-% -- plot Current
+%% -- plot Current
 
 Voltage  = calculateVolt(Current); % calaulate the X axis - Voltage
 
