@@ -14,8 +14,10 @@ clear
 
 %% -- Read the alive .tiff files
 
+prompt = 'Increment of frames:\n ';
+skipNum = input(prompt);
 [imgSeq, imgNum] = ReadTifFiles(...
-    'Open sampling image sequence'); % uint16 cell
+    'Open sampling image sequence', skipNum); % uint16 cell
 
 
 % -- Remove the no-electro background
