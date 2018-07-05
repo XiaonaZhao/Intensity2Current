@@ -1,20 +1,20 @@
-% main function
+% main function for Intensity2Current
 clc
 clear
 
-% I still find it difficult to use the imageJ-roi in matlab especially the
-% reactangle. Firstly, the rectangle's decoded-structure is different from
-% the other types'. Then, the inner coordinates in the imageJ-roi seem not
-% cooperating with the coordinates of pixels showed in imageJ. Finally, I don't
-% know how to decode the Jave code of imageJ and still known little on
-% matlab.
+% There is still two problems in this programme. one is that the CURRENT
+% calculated by the iLaplace doesn't match with the result from the
+% electrochemical workstation. The other is that the present background
+% cutting doesn't correct the bias from the charge and discharge of gold
+% plate.
+
 % Author: nonazhao@mail.ustc.edu.cn;
 % Created: 29 June 2018
 
 
 %% -- Read the alive .tiff files
 
-prompt = 'Increment of frames:\n ';
+prompt = 'Increment of frames for the samples in alive period:\n ';
 skipNum = input(prompt);
 [imgSeq, imgNum] = ReadTifFiles(...
     'Open sampling image sequence', skipNum); % uint16 cell
@@ -22,7 +22,7 @@ skipNum = input(prompt);
 
 % -- Remove the no-electro background
 
-[BgSeq, BgNum] = ReadTifFiles('Open background sequence'); % uint16 cell
+[BgSeq, BgNum] = ReadTifFiles('Open background sequence', 0); % uint16 cell
 imgSubtractBg = BgdRemoval(imgSeq, imgNum, BgSeq, BgNum);
 clear imgSeq BgSeq BgNum
 

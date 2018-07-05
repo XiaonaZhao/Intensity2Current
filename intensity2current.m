@@ -2,8 +2,8 @@ function Current = intensity2current(Intensity, imgNum)
 % The reaction on the electrode surface: H2O + e- = H + OH-
 
 n = -1;    % Number of electrons transferred in the cell;
-F = 9.65e4;   %Faraday constant;
-D = 1e-9;
+F = 9.65e4;   % Faraday constant;
+D = 1e-9; % Actually, Do & Dr are ~ (5 - 8)e-9
 
 AlphaOxi = 7.34;
 AlphaRe = 7.34./2;
