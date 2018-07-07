@@ -8,7 +8,7 @@ end
 tifFiles = cellstr(tifFiles);  % Care for the correct type 
 
 if skipNum == 0
-    tifNum = floor((length(tifFiles))/(skipNum+1));
+    tifNum = length(tifFiles);
 else
     tifNum = floor((length(tifFiles))/(skipNum+1))+1;
 end

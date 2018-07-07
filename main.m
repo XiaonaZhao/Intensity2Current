@@ -27,6 +27,7 @@ skipNum = input(prompt);
 [BgSeq, BgNum] = ReadTifFiles('Open background sequence', 0); % uint16 cell
 imgSubtractBg = BgdRemoval(imgSeq, imgNum, BgSeq, BgNum);
 clear imgSeq BgSeq BgNum skipNum
+disp('***''Read the alive .tiff files'' has finished***');
 
 
 %% -- Select ROIs
@@ -41,8 +42,8 @@ switch sROI.strType
     case 'Rectangle'
         RectBounds = sROI.vnRectBounds;
         % [x-left_up y-left_up x-right_down y-right_down]
-        col = [RectBounds(2), RectBounds(4)];
-        row = [RectBounds(1), RectBounds(3)];
+        col = [RectBounds(2), RectBounds(2), RectBounds(4), RectBounds(4)];
+        row = [RectBounds(1), RectBounds(3), RectBounds(3), RectBounds(1)];
     case 'Polygon'
         Polygon = sROI.mnCoordinates;
         col = Polygon(:,2);
@@ -59,18 +60,21 @@ for j = 1:imgNum
 end
 clear cstrFilenames cstrPathname sROI
 clear col row BW j imgSubtractBg
+disp('***''Select ROIs'' has finished***');
 
 
 %% -- Average each dROI
 
 Intensity = averROI(imgSegment, imgNum, nonzeroBW);
 clear imgSegment nonzeroBW
+disp('***''Select ROIs'' has finished***');
 
 
 %% -- Laplace and iLaplace dROI for Current info
 
 Current = intensity2current(Intensity, imgNum);
 % clear Intensity imgNum
+disp('***''Average each dROI'' has finished***');
 
 
 %% -- plot Current
@@ -85,3 +89,4 @@ plot(Voltage, Current);
 title('Graph of current calculated by SPR intensity'); % plot title
 xlabel('Voltage/V') % x-axis label
 ylabel('Current/A') % y-axis label
+disp('***''plot Current'' has finished***');
