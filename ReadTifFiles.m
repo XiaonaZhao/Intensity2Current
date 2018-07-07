@@ -1,14 +1,21 @@
 function [tifSeq, tifNum] = ReadTifFiles(TopName, skipNum)
+
 [tifFiles, tifPath] = uigetfile('*.tiff', 'Multiselect', 'on', TopName); 
 if isequal(tifFiles, 0)
    disp('User selected Cancel')
    return;
 end
 tifFiles = cellstr(tifFiles);  % Care for the correct type 
-tifNum = floor((length(tifFiles))/(skipNum+1)) + 1;
-tifSeq = cell(tifNum,1); % Line Data structure, imgSeq is column vector
-for jj = 1:tifNum
-    tifSeq{jj} = imread(fullfile(tifPath, tifFiles{jj})); % read all tiff files
+
+if skipNum == 0
+    tifNum = floor((length(tifFiles))/(skipNum+1));
+else
+    tifNum = floor((length(tifFiles))/(skipNum+1))+1;
 end
-clear jj
+
+tifSeq = cell(tifNum,1); % Line Data structure, imgSeq is column vector
+for j = 1:tifNum
+    tifSeq{j} = imread(fullfile(tifPath, tifFiles{j})); % read all tiff files
+end
+clear jj skipNum
 end

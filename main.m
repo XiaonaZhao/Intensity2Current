@@ -2,6 +2,8 @@
 clc
 clear
 
+% ATTENTION: 
+
 % There is still two problems in this programme. one is that the CURRENT
 % calculated by the iLaplace doesn't match with the result from the
 % electrochemical workstation. The other is that the present background
@@ -24,7 +26,7 @@ skipNum = input(prompt);
 
 [BgSeq, BgNum] = ReadTifFiles('Open background sequence', 0); % uint16 cell
 imgSubtractBg = BgdRemoval(imgSeq, imgNum, BgSeq, BgNum);
-clear imgSeq BgSeq BgNum
+clear imgSeq BgSeq BgNum skipNum
 
 
 %% -- Select ROIs
@@ -72,7 +74,10 @@ Current = intensity2current(Intensity, imgNum);
 
 
 %% -- plot Current
-
+prompt = 'Please input the beginning voltage:\n ';
+BeginVolt = input(prompt);
+prompt = 'Please input the middle voltage:\n ';
+EndVolt = input(prompt);
 Voltage  = calculateVolt(Current); % calaulate the X axis - Voltage
 
 figure
