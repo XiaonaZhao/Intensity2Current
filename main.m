@@ -82,7 +82,7 @@ prompt = 'Please input the beginning voltage:\n ';
 BeginVolt = input(prompt);
 prompt = 'Please input the middle voltage:\n ';
 EndVolt = input(prompt);
-Voltage  = calculateVolt(Current); % calaulate the X axis - Voltage
+Voltage  = calculateVolt(Current, BeginVolt, EndVolt); % calaulate the X axis - Voltage
 
 figure
 plot(Voltage, Current);
