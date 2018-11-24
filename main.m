@@ -2,7 +2,7 @@
 clc
 clear
 
-% ATTENTION: 
+% ATTENTION:
 
 % There is still two problems in this programme. one is that the CURRENT
 % calculated by the iLaplace doesn't match with the result from the
@@ -12,6 +12,9 @@ clear
 
 % Author: nonazhao@mail.ustc.edu.cn;
 % Created: 29 June 2018
+
+% -- Important modification: 22 Nov 2018 --
+% added submain.m, fft_P1.m, lowp.m and several plot lines
 
 
 %% -- Read the alive .tiff files
@@ -54,7 +57,7 @@ nonzeroBW  = length(find(BW(:)~=0));
 BW = BW*1;
 % "*1" turns logical into double, then "uint16" turn double into uint16.
 % set more variable to monitor the matrix changes
-imgSegment = cell(imgNum,1); 
+imgSegment = cell(imgNum,1);
 for j = 1:imgNum
     imgSegment{j} = imgSubtractBg{j}.*BW; % double cell
 end
@@ -90,3 +93,4 @@ title('Graph of current calculated by SPR intensity'); % plot title
 xlabel('Voltage/V') % x-axis label
 ylabel('Current/A') % y-axis label
 disp('***''plot Current'' has finished***');
+

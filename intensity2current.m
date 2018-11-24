@@ -8,7 +8,8 @@ D = 1e-9; % Actually, Do & Dr are ~ (5 - 8)e-9
 AlphaOxi = 7.34;
 AlphaRe = 7.34./2;
 Constant = (-1)*(AlphaOxi-AlphaRe)/(D^(0.5))/(n*F*(pi^(0.5)));
-frameRate = 106;
+% frameRate = 106; % PIKE
+frameRate = 100; % HAMAMATSU
 Time = (1:imgNum)./frameRate;
 DeltaT = ones(imgNum,1)./frameRate;
 
