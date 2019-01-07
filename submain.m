@@ -1,11 +1,11 @@
 %% -- raw figures
-Potential = sheet(:, 10);
+Potential = sheet(:, 6);
 for n = 1:col
     Current(:, n) = intensity2current(Yfit(:, n), 1601);
 end
 
 figure('color','w');
-for n = 1:col
+for n = [1 3]
     plot(Potential(4:end), -Current(3:end, n)); % get fitted lines
     hold on
 end
@@ -64,15 +64,16 @@ ylabel('¦¤Intensity');
 
 %% -- filtered 1-D digital CV signal
 filtCurrent = zeros(size(Current(3:end, :)));
-for n = 1:col
-    filtCurrent(:, n) = lowp(Current(3:end, n), 4, 30, 0.1, 20, Fs);
+for n = [1 3]
+    filtCurrent(:, n) = lowp(Current(3:end, n), 4, 30, 0.1, 20, 800);
 end
 
 figure('color','w');
-for n = 1:col
+for n = [1 3]
     % scatter(Potential(4:end), -filtCurrent(:, n));
     %     figure('color','w');
-    plot(Potential(4:end), -filtCurrent(:, n), color(n));
+%     plot(Potential(4:end), -filtCurrent(:, n), color(n));
+plot(Potential(4:end), -filtCurrent(:, n));
     %     legend(roiLabel(n)); % plot respectively
     %     xlabel('Potential/V');
     %     ylabel('¦¤Current');
