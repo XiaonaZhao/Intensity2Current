@@ -1,4 +1,5 @@
 # Intensity2Current
+This code works for the paper "Plasmonic Imaging of the Layer-dependent Electrocatalytic Activity of Two-dimensional Catalysts".
 ## Framework
 1. Read .tiff files
 2. Background removal and rolling ball algorithm
